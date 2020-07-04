@@ -1,0 +1,9 @@
+[package]
+name = "pong"
+version = "0.1.0"
+authors = ["wartyz <zwenderk@hotmail.com>"]
+edition = "2018"
+
+
+[dependencies]
+zengine = {path = "../../"}
