@@ -8,7 +8,8 @@ https://www.youtube.com/watch?v=ILQlXIN15Tw&list=PL-88NuvRRCqAPrkxlIH3bFdNiKTYhZ
 https://www.youtube.com/watch?v=Vpt9461DiXQ&list=PL-88NuvRRCqAPrkxlIH3bFdNiKTYhZbuj&index=7
 https://www.youtube.com/watch?v=27VrlPfHdqM&list=PL-88NuvRRCqAPrkxlIH3bFdNiKTYhZbuj&index=8
 https://www.youtube.com/watch?v=_uGRDyX5MVA&list=PL-88NuvRRCqAPrkxlIH3bFdNiKTYhZbuj&index=9
-34:20
+https://www.youtube.com/watch?v=ZityqrnAR3s&list=PL-88NuvRRCqAPrkxlIH3bFdNiKTYhZbuj&index=10
+56:57
 */
 
 extern crate sdl2;
@@ -17,14 +18,18 @@ extern crate gl;
 use sdl2::video::GLProfile;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
+use sdl2::video::DisplayMode;
+use sdl2::VideoSubsystem;
+use sdl2::video::FullscreenType;
 
 use crate::gl_utilities::shader::ShaderManager;
 use crate::math::matrix4x4::Matrix4x4;
 use crate::graphics::sprite::Sprite;
 use crate::math::transform::Transform;
-use sdl2::video::DisplayMode;
-use sdl2::VideoSubsystem;
-use self::sdl2::video::FullscreenType;
+use crate::graphics::texture::Texture;
+use crate::graphics::material::Material;
+use crate::graphics::color::Color;
+
 
 // LLamada de debugging
 extern "system" fn dbg_callback(
@@ -96,6 +101,9 @@ pub fn start(option: EngineOption) {
     unsafe {
         gl::Enable(gl::DEBUG_OUTPUT);
         gl::DebugMessageCallback(Some(dbg_callback), std::ptr::null());
+
+        gl::Enable(gl::BLEND);
+        gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
     }
 
     println!("Pixel format en el contexto de la ventana GL {:?}", window.window_pixel_format());
@@ -114,21 +122,30 @@ pub fn start(option: EngineOption) {
         include_str!("basic.frag"),
     );
 
+    // Cargamos texturas
+    let texture1 = Texture::new("test.png");
+    let texture2 = Texture::new("duck.png");
+
 
     let u_projection_location = basic_shader.get_uniform_location("u_projection");
 
-    let mut sprite = Sprite::new("test", basic_shader, None, None);
+    let mut sprite = Sprite::new(
+        "test",
+        basic_shader,
+        Material::new(Color::white(), &texture2),
+        None,
+        None);
     sprite.load();
 
     // Creamos la matriz de transformación
     let mut transform = Transform::new();
     transform.position.x = 150.0;
-    transform.position.y = 150.0;
+    transform.position.y = 500.0;
 
     transform.rotation.z = 30.0;
 
-    transform.scale.x = 3.0;
-    transform.scale.y = 3.0;
+    transform.scale.x = 50.0;
+    transform.scale.y = 50.0;
 
     // Usar programa shader
     basic_shader.use_shader();
@@ -180,7 +197,7 @@ pub fn start(option: EngineOption) {
             gl::Enable(gl::SCISSOR_TEST);
 
             // Ahora solamente el trozo de pantalla recortado
-            gl::ClearColor(1.0, 1.0, 1.0, 1.0);
+            gl::ClearColor(1.0, 1.0, 0.0, 1.0);
             gl::Clear(gl::COLOR_BUFFER_BIT);
 
             gl::UniformMatrix4fv(
