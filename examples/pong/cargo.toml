@@ -6,4 +6,4 @@ edition = "2018"
 
 
 [dependencies]
-zengine = {path = "../../"}
+zengine = { path = "../../zengine/" }
