@@ -12,7 +12,8 @@ https://www.youtube.com/watch?v=ZityqrnAR3s&list=PL-88NuvRRCqAPrkxlIH3bFdNiKTYhZ
 https://www.youtube.com/watch?v=FqaNT7RkxL4&list=PL-88NuvRRCqAPrkxlIH3bFdNiKTYhZbuj&index=11
        12,13,14 Cambio del engine y teoria
 https://www.youtube.com/watch?v=wlxBUDIzd3Y&list=PL-88NuvRRCqAPrkxlIH3bFdNiKTYhZbuj&index=15
-24:56
+https://www.youtube.com/watch?v=87IjPJtn13Y&list=PL-88NuvRRCqAPrkxlIH3bFdNiKTYhZbuj&index=16
+40:06
 */
 use crate::core::{Store, Scene, Trans};
 
