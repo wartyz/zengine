@@ -13,23 +13,37 @@ https://www.youtube.com/watch?v=FqaNT7RkxL4&list=PL-88NuvRRCqAPrkxlIH3bFdNiKTYhZ
        12,13,14 Cambio del engine y teoria
 https://www.youtube.com/watch?v=wlxBUDIzd3Y&list=PL-88NuvRRCqAPrkxlIH3bFdNiKTYhZbuj&index=15
 https://www.youtube.com/watch?v=87IjPJtn13Y&list=PL-88NuvRRCqAPrkxlIH3bFdNiKTYhZbuj&index=16
-40:06
+18:16
 */
-use crate::core::{Store, Scene, Trans};
+use crate::core::{Store, Scene, Trans, System};
 
 // https://docs.rs/gl/0.14.0/gl/#functions
 #[derive(Default)]
 pub struct Engine {
     store: Store,
+    systems: Vec<Box<dyn System>>,
 }
 
 impl Engine {
+    pub fn with_system<S: System>(mut self, system: S) -> Self {
+        self.systems.push(Box::new(system));
+        self
+    }
+
     pub fn run<S: Scene>(mut self, mut scene: S) {
         println!("Inicia Engine");
+
+        println!("Inicia Systems");
+        for s in self.systems.iter_mut() {
+            s.init(&mut self.store);
+        }
 
         scene.on_start(&mut self.store);
 
         'main_loop: loop {
+            for s in self.systems.iter_mut() {
+                s.run(&mut self.store);
+            }
             match scene.update(&mut self.store) {
                 Trans::Quit => {
                     println!("Recibida transación Quit");
@@ -40,6 +54,11 @@ impl Engine {
         }
 
         scene.on_stop(&mut self.store);
+
+        println!("Systems dispose");
+        for s in self.systems.iter_mut() {
+            s.dispose(&mut self.store);
+        }
 
         println!("Finaliza Engine");
     }

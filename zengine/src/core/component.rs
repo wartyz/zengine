@@ -36,6 +36,36 @@ impl Components {
         }
     }
 
+    pub fn get<C: Component>(&self) -> Option<&Set<C>> {
+        let type_id = TypeId::of::<C>();
+
+        match self.storages.get(&type_id) {
+            Some(storage) => {
+                // Ya existe
+                storage.downcast_ref::<Set<C>>()
+            }
+            None => {
+                // No existe
+                None
+            }
+        }
+    }
+
+    pub fn get_mut<C: Component>(&mut self) -> Option<&mut Set<C>> {
+        let type_id = TypeId::of::<C>();
+
+        match self.storages.get_mut(&type_id) {
+            Some(storage) => {
+                // Ya existe
+                storage.downcast_mut::<Set<C>>()
+            }
+            None => {
+                // No existe
+                None
+            }
+        }
+    }
+
     pub fn delete_entity(&mut self, entity: &Entity) {
         for s in self.storages.iter_mut() {
             s.1.remove(&entity);
