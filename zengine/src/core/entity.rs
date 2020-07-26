@@ -54,7 +54,7 @@ impl<'a> Drop for EntityBuilder<'a> {
     // Cuando es consumido EntityBuilder se llama a drop() que elimina el Entity de store
     fn drop(&mut self) {
         if !self.is_build {
-            self.store.delete_entity(&self.entity);
+            self.store.remove_entity(&self.entity);
         }
     }
 }
